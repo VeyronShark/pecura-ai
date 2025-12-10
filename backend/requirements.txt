@@ -1,0 +1,2 @@
+# Backend dependencies
+# TODO: Add FastAPI, scikit-learn, pandas, joblib, vaderSentiment, etc.
