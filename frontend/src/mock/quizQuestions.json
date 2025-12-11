@@ -1,0 +1,61 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "question": "How does your skin feel after cleansing?",
+      "type": "single",
+      "options": [
+        { "value": "tight_dry", "label": "Tight and dry" },
+        { "value": "comfortable", "label": "Comfortable and balanced" },
+        { "value": "oily_shiny", "label": "Still oily or shiny" },
+        { "value": "irritated", "label": "Irritated or red" }
+      ]
+    },
+    {
+      "id": "q2", 
+      "question": "How often do you experience breakouts?",
+      "type": "single",
+      "options": [
+        { "value": "never", "label": "Never or very rarely" },
+        { "value": "occasionally", "label": "Occasionally" },
+        { "value": "frequently", "label": "Frequently" },
+        { "value": "constantly", "label": "Almost constantly" }
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "How does your skin look by midday?",
+      "type": "single", 
+      "options": [
+        { "value": "same", "label": "Same as morning" },
+        { "value": "slightly_oily", "label": "Slightly oily in T-zone" },
+        { "value": "very_oily", "label": "Very oily all over" },
+        { "value": "dry_tight", "label": "Dry and tight" }
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "How does your skin react to new products?",
+      "type": "single",
+      "options": [
+        { "value": "no_reaction", "label": "No reaction, adapts well" },
+        { "value": "mild_reaction", "label": "Mild reaction sometimes" },
+        { "value": "strong_reaction", "label": "Strong reaction often" },
+        { "value": "very_sensitive", "label": "Very sensitive, reacts to most products" }
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "What is your main skin concern?",
+      "type": "multiple",
+      "options": [
+        { "value": "acne", "label": "Acne and breakouts" },
+        { "value": "dryness", "label": "Dryness and dehydration" },
+        { "value": "aging", "label": "Fine lines and aging" },
+        { "value": "sensitivity", "label": "Sensitivity and irritation" },
+        { "value": "pigmentation", "label": "Dark spots and pigmentation" },
+        { "value": "pores", "label": "Large pores" }
+      ]
+    }
+  ]
+}

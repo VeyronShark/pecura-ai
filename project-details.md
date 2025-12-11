@@ -1,7 +1,7 @@
-# Skin-Care Product Recommendation System — Project README
+# Pecura AI — Project README
 
 ## Project Objective
-Build a production-ready prototype of a **Skin-Care Product Recommendation System** that gives personalized product and routine suggestions based on a user's skin type, concerns, ingredient compatibility, and community feedback. The system should be usable as a capstone submission: well-documented, modular, tested, and clearly demonstrable.
+Build a production-ready prototype of **Pecura AI**, a skincare product recommendation system that gives personalized product and routine suggestions based on a user's skin type, concerns, ingredient compatibility, and community feedback. The system should be usable as a capstone submission: well-documented, modular, tested, and clearly demonstrable.
 
 Primary goals:
 - Accurately classify user skin type from a short survey.

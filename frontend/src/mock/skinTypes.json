@@ -1,0 +1,34 @@
+{
+  "skinTypes": [
+    {
+      "type": "Normal",
+      "description": "Balanced skin with few imperfections, not too oily or dry",
+      "characteristics": ["Balanced oil production", "Small pores", "Few blemishes", "Good circulation"],
+      "recommendations": ["Gentle cleanser", "Light moisturizer", "SPF protection"]
+    },
+    {
+      "type": "Dry",
+      "description": "Skin that lacks moisture and may feel tight or rough",
+      "characteristics": ["Tight feeling", "Rough texture", "Flaking", "Fine lines"],
+      "recommendations": ["Hydrating cleanser", "Rich moisturizer", "Hyaluronic acid", "Ceramides"]
+    },
+    {
+      "type": "Oily",
+      "description": "Skin that produces excess sebum, leading to shine and enlarged pores",
+      "characteristics": ["Shiny appearance", "Large pores", "Blackheads", "Acne prone"],
+      "recommendations": ["Foaming cleanser", "Oil-free moisturizer", "Salicylic acid", "Niacinamide"]
+    },
+    {
+      "type": "Combination",
+      "description": "Mix of oily and dry areas, typically oily T-zone with dry cheeks",
+      "characteristics": ["Oily T-zone", "Dry cheeks", "Mixed pore sizes", "Variable texture"],
+      "recommendations": ["Gentle cleanser", "Targeted treatments", "Light moisturizer", "Zone-specific care"]
+    },
+    {
+      "type": "Sensitive",
+      "description": "Skin that reacts easily to products and environmental factors",
+      "characteristics": ["Redness", "Irritation", "Burning sensation", "Reactive to products"],
+      "recommendations": ["Fragrance-free products", "Gentle ingredients", "Patch testing", "Minimal routine"]
+    }
+  ]
+}

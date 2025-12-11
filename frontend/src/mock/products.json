@@ -1,0 +1,57 @@
+[
+  {
+    "product_id": "p001",
+    "name": "Hydrating Gentle Cleanser",
+    "brand": "CeraVe",
+    "price": 12.99,
+    "type": "Cleanser",
+    "ingredients": ["aqua", "glycerin", "ceramides", "hyaluronic acid"],
+    "image": "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=300&h=300&fit=crop",
+    "rating": 4.5,
+    "reviews_count": 1250
+  },
+  {
+    "product_id": "p002", 
+    "name": "Niacinamide 10% + Zinc 1%",
+    "brand": "The Ordinary",
+    "price": 7.20,
+    "type": "Serum",
+    "ingredients": ["aqua", "niacinamide", "zinc PCA", "tamarindus indica seed gum"],
+    "image": "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=300&h=300&fit=crop",
+    "rating": 4.2,
+    "reviews_count": 890
+  },
+  {
+    "product_id": "p003",
+    "name": "Daily Facial Moisturizer SPF 30",
+    "brand": "Neutrogena",
+    "price": 15.49,
+    "type": "Moisturizer",
+    "ingredients": ["avobenzone", "octinoxate", "glycerin", "dimethicone"],
+    "image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=300&fit=crop",
+    "rating": 4.3,
+    "reviews_count": 2100
+  },
+  {
+    "product_id": "p004",
+    "name": "Retinol 0.5% in Squalane",
+    "brand": "The Ordinary",
+    "price": 9.90,
+    "type": "Treatment",
+    "ingredients": ["squalane", "retinol", "caprylic/capric triglyceride"],
+    "image": "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=300&h=300&fit=crop",
+    "rating": 4.4,
+    "reviews_count": 756
+  },
+  {
+    "product_id": "p005",
+    "name": "Salicylic Acid 2% Solution",
+    "brand": "The Ordinary",
+    "price": 8.10,
+    "type": "Exfoliant",
+    "ingredients": ["aqua", "salicylic acid", "witch hazel", "panthenol"],
+    "image": "https://images.unsplash.com/photo-1612817288484-6f916006741a?w=300&h=300&fit=crop",
+    "rating": 4.1,
+    "reviews_count": 634
+  }
+]
