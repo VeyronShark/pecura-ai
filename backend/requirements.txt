@@ -1,2 +1,7 @@
-# Backend dependencies
-# TODO: Add FastAPI, scikit-learn, pandas, joblib, vaderSentiment, etc.
+fastapi
+uvicorn
+pandas
+scikit-learn
+joblib
+numpy
+pydantic
