@@ -3,7 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import joblib
 import os
+from routers.recommend import router as recommend_router
 
+app.include_router(recommend_router, tags=["Recommendations"])
 app = FastAPI(title="Pecura AI Backend")
 
 app.add_middleware(
