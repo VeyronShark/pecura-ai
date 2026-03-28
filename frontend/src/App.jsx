@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AppProvider } from './context/AppContext.jsx';
 import Layout from './components/Layout.jsx';
 import Landing from './pages/Landing.jsx';
 import Quiz from './pages/Quiz.jsx';
@@ -9,22 +10,19 @@ import RoutineBuilder from './pages/RoutineBuilder.jsx';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Landing page without layout */}
-        <Route path="/" element={<Landing />} />
-        
-        {/* Pages with layout */}
-        <Route path="/quiz" element={<Layout><Quiz /></Layout>} />
-        <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
-        <Route path="/products" element={<Layout><Products /></Layout>} />
-        <Route path="/ingredient-checker" element={<Layout><IngredientChecker /></Layout>} />
-        <Route path="/routine-builder" element={<Layout><RoutineBuilder /></Layout>} />
-        
-        {/* Catch all route */}
-        <Route path="*" element={<Landing />} />
-      </Routes>
-    </Router>
+    <AppProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/quiz" element={<Quiz />} />
+          <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
+          <Route path="/products" element={<Layout><Products /></Layout>} />
+          <Route path="/ingredient-checker" element={<Layout><IngredientChecker /></Layout>} />
+          <Route path="/routine-builder" element={<Layout><RoutineBuilder /></Layout>} />
+          <Route path="*" element={<Landing />} />
+        </Routes>
+      </Router>
+    </AppProvider>
   );
 }
 

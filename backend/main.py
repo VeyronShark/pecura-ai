@@ -3,9 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import joblib
 import os
-from routers.recommend import router as recommend_router
 
-app.include_router(recommend_router, tags=["Recommendations"])
 app = FastAPI(title="Pecura AI Backend")
 
 app.add_middleware(
@@ -16,22 +14,30 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from routers.recommend import router as recommend_router
+from routers.ingredients import router as ingredients_router
+from routers.products import router as products_router
+
+app.include_router(recommend_router, tags=["Recommendations"])
+app.include_router(ingredients_router, tags=["Ingredients"])
+app.include_router(products_router, tags=["Products"])
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "models")
 
 try:
     skin_model = joblib.load(os.path.join(MODEL_PATH, "skin_type_model.pkl"))
     skin_encoders = joblib.load(os.path.join(MODEL_PATH, "skin_encoders.pkl"))
-except:
+except Exception:
     skin_model = None
-    print("⚠️ Model not found. Run train_models.py first.")
+    print("⚠️  Skin model not found. Run train_models.py first.")
 
 class QuizInput(BaseModel):
     responses: dict
 
 @app.get("/")
 def home():
-    return {"message": "Skin Care AI is running!"}
+    return {"message": "Pecura AI backend is running!"}
 
 @app.post("/predict/skin-type")
 def predict_skin_type(data: QuizInput):

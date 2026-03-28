@@ -5,6 +5,7 @@ import numpy as np
 from scipy.sparse import load_npz
 from sklearn.metrics.pairwise import cosine_similarity
 import json, os
+from utils.product_serializer import row_to_product
 
 router = APIRouter()
 
@@ -94,6 +95,6 @@ def recommend_by_skin_type(skin_type: str, top_n: int = Query(10, ge=1, le=30)):
     
     products_df["skin_score"] = products_df["ingredients_parsed"].apply(score_product)
     top = products_df[products_df["skin_score"] > 0].sort_values("skin_score", ascending=False).head(top_n)
-    
-    result = top[["product_id", "name", "brand", "price", "type", "skin_score"]].to_dict(orient="records")
+
+    result = [row_to_product(row) | {"skin_score": int(row["skin_score"])} for _, row in top.iterrows()]
     return {"skin_type": skin_type, "recommendations": result}

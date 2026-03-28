@@ -2,59 +2,64 @@
   "questions": [
     {
       "id": "q1",
-      "question": "How does your skin feel after cleansing?",
+      "question": "How does your skin feel about an hour after cleansing (no products applied)?",
+      "hint": "Think about your natural skin state without any moisturizer or serum.",
       "type": "single",
       "options": [
-        { "value": "tight_dry", "label": "Tight and dry" },
-        { "value": "comfortable", "label": "Comfortable and balanced" },
-        { "value": "oily_shiny", "label": "Still oily or shiny" },
-        { "value": "irritated", "label": "Irritated or red" }
+        { "value": "tight_dry", "label": "Tight, dry, or flaky", "emoji": "🏜️" },
+        { "value": "comfortable", "label": "Comfortable and balanced", "emoji": "✨" },
+        { "value": "oily_shiny", "label": "Oily or shiny all over", "emoji": "💧" },
+        { "value": "irritated", "label": "Irritated, red, or itchy", "emoji": "🌡️" }
       ]
     },
     {
-      "id": "q2", 
-      "question": "How often do you experience breakouts?",
+      "id": "q2",
+      "question": "How often do you experience breakouts or blemishes?",
+      "hint": "Consider your average over the past few months.",
       "type": "single",
       "options": [
-        { "value": "never", "label": "Never or very rarely" },
-        { "value": "occasionally", "label": "Occasionally" },
-        { "value": "frequently", "label": "Frequently" },
-        { "value": "constantly", "label": "Almost constantly" }
+        { "value": "never", "label": "Rarely or never", "emoji": "😊" },
+        { "value": "occasionally", "label": "Occasionally (once a month)", "emoji": "🤔" },
+        { "value": "frequently", "label": "Frequently (weekly)", "emoji": "😟" },
+        { "value": "constantly", "label": "Almost constantly", "emoji": "😣" }
       ]
     },
     {
       "id": "q3",
-      "question": "How does your skin look by midday?",
-      "type": "single", 
+      "question": "How does your skin look by midday without touching it?",
+      "hint": "On a typical day without any special treatments.",
+      "type": "single",
       "options": [
-        { "value": "same", "label": "Same as morning" },
-        { "value": "slightly_oily", "label": "Slightly oily in T-zone" },
-        { "value": "very_oily", "label": "Very oily all over" },
-        { "value": "dry_tight", "label": "Dry and tight" }
+        { "value": "same", "label": "Same as the morning", "emoji": "🌤️" },
+        { "value": "slightly_oily", "label": "Slightly oily in the T-zone only", "emoji": "🌥️" },
+        { "value": "very_oily", "label": "Very oily all over", "emoji": "☁️" },
+        { "value": "dry_tight", "label": "Dry and tight", "emoji": "🍂" }
       ]
     },
     {
       "id": "q4",
-      "question": "How does your skin react to new products?",
+      "question": "How does your skin typically react to new skincare products?",
+      "hint": "Think about the last few times you tried something new.",
       "type": "single",
       "options": [
-        { "value": "no_reaction", "label": "No reaction, adapts well" },
-        { "value": "mild_reaction", "label": "Mild reaction sometimes" },
-        { "value": "strong_reaction", "label": "Strong reaction often" },
-        { "value": "very_sensitive", "label": "Very sensitive, reacts to most products" }
+        { "value": "no_reaction", "label": "No reaction, adapts easily", "emoji": "💪" },
+        { "value": "mild_reaction", "label": "Mild reaction occasionally", "emoji": "🤏" },
+        { "value": "strong_reaction", "label": "Often reacts with redness or breakouts", "emoji": "⚠️" },
+        { "value": "very_sensitive", "label": "Very sensitive, reacts to most products", "emoji": "🚨" }
       ]
     },
     {
       "id": "q5",
-      "question": "What is your main skin concern?",
+      "question": "What are your main skin concerns? (Select all that apply)",
+      "hint": "You can choose multiple options.",
       "type": "multiple",
       "options": [
-        { "value": "acne", "label": "Acne and breakouts" },
-        { "value": "dryness", "label": "Dryness and dehydration" },
-        { "value": "aging", "label": "Fine lines and aging" },
-        { "value": "sensitivity", "label": "Sensitivity and irritation" },
-        { "value": "pigmentation", "label": "Dark spots and pigmentation" },
-        { "value": "pores", "label": "Large pores" }
+        { "value": "acne", "label": "Acne and breakouts", "emoji": "🔴" },
+        { "value": "dryness", "label": "Dryness and dehydration", "emoji": "💧" },
+        { "value": "aging", "label": "Fine lines and aging", "emoji": "⏳" },
+        { "value": "sensitivity", "label": "Sensitivity and redness", "emoji": "🌸" },
+        { "value": "pigmentation", "label": "Dark spots and uneven tone", "emoji": "🌑" },
+        { "value": "pores", "label": "Large or visible pores", "emoji": "🔍" }
       ]
     }
   ]

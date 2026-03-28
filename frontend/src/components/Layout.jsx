@@ -1,87 +1,110 @@
 import { Link, useLocation } from 'react-router-dom';
-import { User, Home, Search, BookOpen, Settings, FlaskConical, Calendar } from 'lucide-react';
+import { Home, FlaskConical, Calendar, LayoutDashboard, ShoppingBag, Sparkles } from 'lucide-react';
+import { useApp } from '../context/AppContext.jsx';
+
+const nav = [
+  { name: 'Home',        href: '/',                  icon: Home },
+  { name: 'Dashboard',   href: '/dashboard',          icon: LayoutDashboard },
+  { name: 'Products',    href: '/products',           icon: ShoppingBag },
+  { name: 'Ingredients', href: '/ingredient-checker', icon: FlaskConical },
+  { name: 'Routine',     href: '/routine-builder',    icon: Calendar },
+];
 
 const Layout = ({ children }) => {
   const location = useLocation();
-  
-  const navigation = [
-    { name: 'Home', href: '/', icon: Home },
-    { name: 'Quiz', href: '/quiz', icon: Search },
-    { name: 'Products', href: '/products', icon: BookOpen },
-    { name: 'Ingredients', href: '/ingredient-checker', icon: FlaskConical },
-    { name: 'Routine', href: '/routine-builder', icon: Calendar },
-    { name: 'Dashboard', href: '/dashboard', icon: User },
-  ];
+  const { skinProfile } = useApp();
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+    <div className="min-h-screen flex flex-col" style={{ background: 'var(--c-tertiary)' }}>
+
+      {/* ── Header ── */}
+      <header className="sticky top-0 z-40" style={{ background: 'var(--c-primary)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">PA</span>
+          <div className="flex items-center justify-between h-16">
+
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'var(--c-accent1)' }}>
+                <Sparkles className="w-4 h-4" style={{ color: 'var(--c-accent1-fg)' }} />
               </div>
-              <span className="text-xl font-bold text-gray-900">Pecura AI</span>
+              <span className="text-lg font-bold text-white">Pecura <span style={{ color: 'var(--c-accent1)' }}>AI</span></span>
             </Link>
-            
-            <nav className="hidden md:flex space-x-8">
-              {navigation.map((item) => {
-                const Icon = item.icon;
-                const isActive = location.pathname === item.href;
+
+            {/* Desktop nav */}
+            <nav className="hidden md:flex items-center gap-1">
+              {nav.map(({ name, href, icon: Icon }) => {
+                const active = location.pathname === href;
                 return (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                      isActive
-                        ? 'text-purple-600 bg-purple-50'
-                        : 'text-gray-600 hover:text-purple-600 hover:bg-gray-50'
-                    }`}
+                  <Link key={name} to={href}
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all"
+                    style={{
+                      background: active ? 'rgba(255,255,255,0.2)' : 'transparent',
+                      color: active ? '#fff' : 'rgba(255,255,255,0.75)',
+                    }}
+                    onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
+                    onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent'; }}
                   >
-                    <Icon className="w-4 h-4" />
-                    <span>{item.name}</span>
+                    <Icon className="w-4 h-4" />{name}
                   </Link>
                 );
               })}
             </nav>
 
-            <button className="p-2 text-gray-600 hover:text-purple-600 transition-colors">
-              <Settings className="w-5 h-5" />
-            </button>
+            {/* CTA */}
+            {skinProfile ? (
+              <Link to="/dashboard"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-semibold transition-colors"
+                style={{ background: 'var(--c-accent1)', color: 'var(--c-accent1-fg)' }}
+              >
+                <div className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold"
+                  style={{ background: 'var(--c-primary)', color: '#fff' }}>
+                  {skinProfile.skin_type[0]}
+                </div>
+                {skinProfile.skin_type} skin
+              </Link>
+            ) : (
+              <Link to="/quiz"
+                className="px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+                style={{ background: 'var(--c-accent1)', color: 'var(--c-accent1-fg)' }}
+              >
+                Take Quiz
+              </Link>
+            )}
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* ── Content ── */}
+      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 pb-24 md:pb-8">
         {children}
       </main>
 
-      {/* Mobile Navigation */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg">
+      {/* ── Mobile nav ── */}
+      <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t"
+        style={{ background: 'var(--c-primary)', borderColor: 'rgba(255,255,255,0.15)' }}>
         <div className="flex justify-around py-2">
-          {navigation.map((item) => {
-            const Icon = item.icon;
-            const isActive = location.pathname === item.href;
+          {nav.map(({ name, href, icon: Icon }) => {
+            const active = location.pathname === href;
             return (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={`flex flex-col items-center py-2 px-3 rounded-lg transition-colors ${
-                  isActive
-                    ? 'text-purple-600'
-                    : 'text-gray-600'
-                }`}
+              <Link key={name} to={href}
+                className="flex flex-col items-center gap-0.5 py-1 px-3 rounded-lg transition-colors"
+                style={{ color: active ? 'var(--c-accent1)' : 'rgba(255,255,255,0.6)' }}
               >
                 <Icon className="w-5 h-5" />
-                <span className="text-xs mt-1">{item.name}</span>
+                <span className="text-xs">{name}</span>
               </Link>
             );
           })}
         </div>
-      </div>
+      </nav>
+
+      {/* ── Footer ── */}
+      <footer className="hidden md:block py-4 border-t"
+        style={{ background: 'var(--c-primary)', borderColor: 'rgba(255,255,255,0.15)' }}>
+        <p className="text-center text-xs text-white/60 max-w-4xl mx-auto px-4">
+          Pecura AI is not a substitute for professional dermatological advice. Always consult a healthcare provider for serious skin concerns.
+        </p>
+      </footer>
     </div>
   );
 };

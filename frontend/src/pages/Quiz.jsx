@@ -1,90 +1,57 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, CheckCircle } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Sparkles, CheckCircle2 } from 'lucide-react';
 import { skincareAPI } from '../api/skincare.js';
+import { useApp } from '../context/AppContext.jsx';
 import LoadingSpinner from '../components/LoadingSpinner.jsx';
 
 const Quiz = () => {
   const navigate = useNavigate();
+  const { setSkinProfile } = useApp();
   const [questions, setQuestions] = useState([]);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState({});
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    loadQuestions();
+    skincareAPI.getQuizQuestions().then(q => { setQuestions(q); setLoading(false); });
   }, []);
 
-  const loadQuestions = async () => {
-    try {
-      const questionsData = await skincareAPI.getQuizQuestions();
-      setQuestions(questionsData);
-    } catch (error) {
-      console.error('Error loading questions:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const q = questions[current];
+  const progress = questions.length ? ((current + 1) / questions.length) * 100 : 0;
 
-  const handleAnswer = (questionId, value) => {
-    const question = questions[currentQuestion];
-    
-    if (question.type === 'multiple') {
-      const currentAnswers = answers[questionId] || [];
-      const newAnswers = currentAnswers.includes(value)
-        ? currentAnswers.filter(a => a !== value)
-        : [...currentAnswers, value];
-      
-      setAnswers(prev => ({
-        ...prev,
-        [questionId]: newAnswers
-      }));
+  const handleAnswer = (qId, value, type) => {
+    if (type === 'multiple') {
+      const prev = answers[qId] || [];
+      const next = prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value];
+      setAnswers(a => ({ ...a, [qId]: next }));
     } else {
-      setAnswers(prev => ({
-        ...prev,
-        [questionId]: value
-      }));
+      setAnswers(a => ({ ...a, [qId]: value }));
     }
   };
 
   const canProceed = () => {
-    const question = questions[currentQuestion];
-    const answer = answers[question.id];
-    
-    if (question.type === 'multiple') {
-      return answer && answer.length > 0;
-    }
-    return answer !== undefined;
+    if (!q) return false;
+    const ans = answers[q.id];
+    return q.type === 'multiple' ? ans?.length > 0 : ans !== undefined;
   };
 
   const handleNext = () => {
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-    } else {
-      handleSubmit();
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1);
-    }
+    if (current < questions.length - 1) setCurrent(c => c + 1);
+    else handleSubmit();
   };
 
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
       const result = await skincareAPI.predictSkinType(answers);
-      
-      // Store result in localStorage for dashboard
-      localStorage.setItem('skinTypeResult', JSON.stringify(result));
-      localStorage.setItem('quizAnswers', JSON.stringify(answers));
-      
+      const profile = { ...result, concerns: answers.q5 || [], answeredAt: new Date().toISOString() };
+      setSkinProfile(profile);
       navigate('/dashboard');
-    } catch (error) {
-      console.error('Error submitting quiz:', error);
-      alert('There was an error processing your quiz. Please try again.');
+    } catch (err) {
+      console.error(err);
+      alert('Something went wrong. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -92,113 +59,95 @@ const Quiz = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <LoadingSpinner size="lg" text="Loading quiz questions..." />
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--c-primary)' }}>
+        <LoadingSpinner size="lg" text="Loading quiz..." />
       </div>
     );
   }
-
-  if (questions.length === 0) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-600 mb-4">Unable to load quiz questions.</p>
-          <button
-            onClick={() => navigate('/')}
-            className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors"
-          >
-            Go Home
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  const question = questions[currentQuestion];
-  const progress = ((currentQuestion + 1) / questions.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 py-8">
-      <div className="max-w-2xl mx-auto px-4">
-        {/* Progress Bar */}
-        <div className="mb-8">
-          <div className="flex justify-between text-sm text-gray-600 mb-2">
-            <span>Question {currentQuestion + 1} of {questions.length}</span>
-            <span>{Math.round(progress)}% Complete</span>
+    <div className="min-h-screen py-10 px-4" style={{ background: 'var(--c-primary)' }}>
+      <div className="max-w-xl mx-auto">
+
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium mb-3"
+            style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
+            <Sparkles className="w-3.5 h-3.5" /> Skin Type Quiz
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div
-              className="bg-gradient-to-r from-purple-600 to-pink-600 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            />
+          <h1 className="text-2xl font-bold text-white">Discover your skin type</h1>
+          <p className="text-white/60 text-sm mt-1">Answer honestly for the most accurate results</p>
+        </div>
+
+        {/* Progress */}
+        <div className="mb-6">
+          <div className="flex justify-between text-xs text-white/60 mb-1.5">
+            <span>Question {current + 1} of {questions.length}</span>
+            <span>{Math.round(progress)}% complete</span>
+          </div>
+          <div className="h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.2)' }}>
+            <div className="h-full rounded-full transition-all duration-500"
+              style={{ width: `${progress}%`, background: 'var(--c-accent1)' }} />
+          </div>
+          <div className="flex justify-between mt-2">
+            {questions.map((_, i) => (
+              <div key={i} className="w-2 h-2 rounded-full transition-all"
+                style={{
+                  background: i < current ? 'var(--c-accent1)' : i === current ? '#fff' : 'rgba(255,255,255,0.25)',
+                  transform: i === current ? 'scale(1.3)' : 'scale(1)',
+                }} />
+            ))}
           </div>
         </div>
 
-        {/* Question Card */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            {question.question}
-          </h2>
+        {/* Question card */}
+        {q && (
+          <div className="rounded-2xl p-6 mb-6 animate-fade-in" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)' }}>
+            <h2 className="text-xl font-bold text-white mb-1">{q.question}</h2>
+            {q.hint && <p className="text-sm text-white/60 mb-5">{q.hint}</p>}
 
-          <div className="space-y-3">
-            {question.options.map((option) => {
-              const isSelected = question.type === 'multiple'
-                ? (answers[question.id] || []).includes(option.value)
-                : answers[question.id] === option.value;
+            <div className="space-y-2.5">
+              {q.options.map(opt => {
+                const selected = q.type === 'multiple'
+                  ? (answers[q.id] || []).includes(opt.value)
+                  : answers[q.id] === opt.value;
 
-              return (
-                <button
-                  key={option.value}
-                  onClick={() => handleAnswer(question.id, option.value)}
-                  className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-200 ${
-                    isSelected
-                      ? 'border-purple-600 bg-purple-50 text-purple-900'
-                      : 'border-gray-200 hover:border-purple-300 hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium">{option.label}</span>
-                    {isSelected && (
-                      <CheckCircle className="w-5 h-5 text-purple-600" />
-                    )}
-                  </div>
-                </button>
-              );
-            })}
+                return (
+                  <button key={opt.value}
+                    onClick={() => handleAnswer(q.id, opt.value, q.type)}
+                    className="w-full text-left px-4 py-3.5 rounded-xl border-2 transition-all duration-150 flex items-center justify-between"
+                    style={{
+                      background: selected ? 'var(--c-accent1)' : 'rgba(255,255,255,0.08)',
+                      borderColor: selected ? 'var(--c-accent1)' : 'rgba(255,255,255,0.2)',
+                      color: selected ? 'var(--c-accent1-fg)' : '#fff',
+                    }}
+                  >
+                    <div className="flex items-center gap-3">
+                      {opt.emoji && <span className="text-xl">{opt.emoji}</span>}
+                      <span className="font-medium text-sm">{opt.label}</span>
+                    </div>
+                    {selected && <CheckCircle2 className="w-5 h-5 shrink-0" />}
+                  </button>
+                );
+              })}
+            </div>
+            {q.type === 'multiple' && <p className="text-xs text-white/50 mt-3">Select all that apply</p>}
           </div>
-
-          {question.type === 'multiple' && (
-            <p className="text-sm text-gray-500 mt-4">
-              You can select multiple options
-            </p>
-          )}
-        </div>
+        )}
 
         {/* Navigation */}
-        <div className="flex justify-between">
-          <button
-            onClick={handlePrevious}
-            disabled={currentQuestion === 0}
-            className="flex items-center space-x-2 px-6 py-3 text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            <ChevronLeft className="w-5 h-5" />
-            <span>Previous</span>
+        <div className="flex items-center justify-between">
+          <button onClick={() => setCurrent(c => c - 1)} disabled={current === 0}
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-30"
+            style={{ color: 'rgba(255,255,255,0.7)', background: 'rgba(255,255,255,0.1)' }}>
+            <ChevronLeft className="w-4 h-4" /> Back
           </button>
 
-          <button
-            onClick={handleNext}
-            disabled={!canProceed() || submitting}
-            className="flex items-center space-x-2 bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            {submitting ? (
-              <LoadingSpinner size="sm" text="" />
-            ) : (
-              <>
-                <span>
-                  {currentQuestion === questions.length - 1 ? 'Get Results' : 'Next'}
-                </span>
-                <ChevronRight className="w-5 h-5" />
-              </>
+          <button onClick={handleNext} disabled={!canProceed() || submitting}
+            className="flex items-center gap-1.5 px-6 py-2.5 rounded-xl font-semibold transition-all disabled:opacity-40"
+            style={{ background: 'var(--c-accent1)', color: 'var(--c-accent1-fg)' }}>
+            {submitting ? <LoadingSpinner size="sm" text="" /> : (
+              <>{current === questions.length - 1 ? 'Get My Results' : 'Next'}<ChevronRight className="w-4 h-4" /></>
             )}
           </button>
         </div>
