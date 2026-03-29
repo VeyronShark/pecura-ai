@@ -1,9 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Sparkles, CheckCircle2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react';
 import { skincareAPI } from '../api/skincare.js';
 import { useApp } from '../context/AppContext.jsx';
 import LoadingSpinner from '../components/LoadingSpinner.jsx';
+
+/* Each question gets its own full-screen colour */
+const STEP_BG = [
+  'var(--c-primary)',
+  'var(--c-secondary)',
+  'var(--c-tertiary)',
+  'var(--c-accent1)',
+  'var(--c-accent2)',
+];
 
 const Quiz = () => {
   const navigate = useNavigate();
@@ -19,7 +28,7 @@ const Quiz = () => {
   }, []);
 
   const q = questions[current];
-  const progress = questions.length ? ((current + 1) / questions.length) * 100 : 0;
+  const bg = STEP_BG[current % STEP_BG.length];
 
   const handleAnswer = (qId, value, type) => {
     if (type === 'multiple') {
@@ -59,96 +68,118 @@ const Quiz = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--c-primary)' }}>
+      <div className="fixed inset-0 flex items-center justify-center" style={{ background: 'var(--c-primary)' }}>
         <LoadingSpinner size="lg" text="Loading quiz..." />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen py-10 px-4" style={{ background: 'var(--c-primary)' }}>
-      <div className="max-w-xl mx-auto">
+    /* Full-screen split layout */
+    <div className="fixed inset-0 flex" style={{ transition: 'background 0.5s ease' }}>
 
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium mb-3"
-            style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
-            <Sparkles className="w-3.5 h-3.5" /> Skin Type Quiz
-          </div>
-          <h1 className="text-2xl font-bold text-white">Discover your skin type</h1>
-          <p className="text-white/60 text-sm mt-1">Answer honestly for the most accurate results</p>
+      {/* Left panel — colour block with question number */}
+      <div className="hidden md:flex w-2/5 flex-col justify-between p-12 relative overflow-hidden noise"
+        style={{ background: bg, transition: 'background 0.5s ease' }}>
+        {/* Big step number watermark */}
+        <div className="absolute bottom-8 right-8 text-[12rem] font-black text-white opacity-[0.07] leading-none select-none">
+          {String(current + 1).padStart(2, '0')}
         </div>
 
-        {/* Progress */}
-        <div className="mb-6">
-          <div className="flex justify-between text-xs text-white/60 mb-1.5">
-            <span>Question {current + 1} of {questions.length}</span>
-            <span>{Math.round(progress)}% complete</span>
-          </div>
-          <div className="h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.2)' }}>
-            <div className="h-full rounded-full transition-all duration-500"
-              style={{ width: `${progress}%`, background: 'var(--c-accent1)' }} />
-          </div>
-          <div className="flex justify-between mt-2">
+        <div>
+          <p className="text-white/50 text-xs font-bold uppercase tracking-widest mb-2">Skin Quiz</p>
+          <p className="text-white font-bold text-lg">Pecura AI</p>
+        </div>
+
+        <div>
+          <p className="text-white/40 text-sm mb-2">Question {current + 1} of {questions.length}</p>
+          {/* Step dots */}
+          <div className="flex gap-2">
             {questions.map((_, i) => (
-              <div key={i} className="w-2 h-2 rounded-full transition-all"
+              <div key={i} className="rounded-full transition-all duration-300"
                 style={{
-                  background: i < current ? 'var(--c-accent1)' : i === current ? '#fff' : 'rgba(255,255,255,0.25)',
-                  transform: i === current ? 'scale(1.3)' : 'scale(1)',
+                  height: '4px',
+                  flex: i === current ? 2 : 1,
+                  background: i <= current ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.2)',
                 }} />
             ))}
           </div>
         </div>
+      </div>
 
-        {/* Question card */}
-        {q && (
-          <div className="rounded-2xl p-6 mb-6 animate-fade-in" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)' }}>
-            <h2 className="text-xl font-bold text-white mb-1">{q.question}</h2>
-            {q.hint && <p className="text-sm text-white/60 mb-5">{q.hint}</p>}
+      {/* Right panel — white, question + options */}
+      <div className="flex-1 flex flex-col overflow-y-auto" style={{ background: 'var(--c-surface)' }}>
 
-            <div className="space-y-2.5">
-              {q.options.map(opt => {
-                const selected = q.type === 'multiple'
-                  ? (answers[q.id] || []).includes(opt.value)
-                  : answers[q.id] === opt.value;
+        {/* Mobile progress bar */}
+        <div className="md:hidden h-1.5 w-full" style={{ background: 'var(--c-border)' }}>
+          <div className="h-full transition-all duration-500"
+            style={{ width: `${((current + 1) / questions.length) * 100}%`, background: bg }} />
+        </div>
 
-                return (
-                  <button key={opt.value}
-                    onClick={() => handleAnswer(q.id, opt.value, q.type)}
-                    className="w-full text-left px-4 py-3.5 rounded-xl border-2 transition-all duration-150 flex items-center justify-between"
-                    style={{
-                      background: selected ? 'var(--c-accent1)' : 'rgba(255,255,255,0.08)',
-                      borderColor: selected ? 'var(--c-accent1)' : 'rgba(255,255,255,0.2)',
-                      color: selected ? 'var(--c-accent1-fg)' : '#fff',
-                    }}
-                  >
-                    <div className="flex items-center gap-3">
-                      {opt.emoji && <span className="text-xl">{opt.emoji}</span>}
-                      <span className="font-medium text-sm">{opt.label}</span>
-                    </div>
-                    {selected && <CheckCircle2 className="w-5 h-5 shrink-0" />}
-                  </button>
-                );
-              })}
+        <div className="flex-1 flex flex-col justify-center px-8 md:px-14 py-12 max-w-xl">
+          {q && (
+            <div className="animate-fade-in" key={current}>
+              <span className="inline-block px-3 py-1 rounded-full text-xs font-bold text-white mb-6"
+                style={{ background: bg }}>
+                {current + 1} / {questions.length}
+              </span>
+              <h2 className="text-2xl md:text-3xl font-bold mb-2 leading-snug" style={{ color: 'var(--c-text)' }}>
+                {q.question}
+              </h2>
+              {q.hint && <p className="text-sm mb-8" style={{ color: 'var(--c-muted)' }}>{q.hint}</p>}
+              {!q.hint && <div className="mb-8" />}
+
+              <div className="space-y-3">
+                {q.options.map(opt => {
+                  const selected = q.type === 'multiple'
+                    ? (answers[q.id] || []).includes(opt.value)
+                    : answers[q.id] === opt.value;
+
+                  return (
+                    <button key={opt.value}
+                      onClick={() => handleAnswer(q.id, opt.value, q.type)}
+                      className="w-full text-left px-5 py-4 rounded-xl border-2 transition-all duration-150 flex items-center justify-between group"
+                      style={{
+                        background: selected ? bg : 'var(--c-surface)',
+                        borderColor: selected ? bg : 'var(--c-border)',
+                        color: selected ? '#fff' : 'var(--c-text)',
+                      }}>
+                      <div className="flex items-center gap-3">
+                        {opt.emoji && <span className="text-xl">{opt.emoji}</span>}
+                        <span className="font-medium">{opt.label}</span>
+                      </div>
+                      {selected
+                        ? <CheckCircle2 className="w-5 h-5 shrink-0 text-white" />
+                        : <div className="w-5 h-5 rounded-full border-2 shrink-0" style={{ borderColor: 'var(--c-border)' }} />
+                      }
+                    </button>
+                  );
+                })}
+              </div>
+
+              {q.type === 'multiple' && (
+                <p className="text-xs mt-3" style={{ color: 'var(--c-muted)' }}>Select all that apply</p>
+              )}
             </div>
-            {q.type === 'multiple' && <p className="text-xs text-white/50 mt-3">Select all that apply</p>}
-          </div>
-        )}
+          )}
+        </div>
 
-        {/* Navigation */}
-        <div className="flex items-center justify-between">
+        {/* Nav footer */}
+        <div className="px-8 md:px-14 py-6 flex items-center justify-between"
+          style={{ borderTop: '1px solid var(--c-border)' }}>
           <button onClick={() => setCurrent(c => c - 1)} disabled={current === 0}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-30"
-            style={{ color: 'rgba(255,255,255,0.7)', background: 'rgba(255,255,255,0.1)' }}>
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium transition-all disabled:opacity-25"
+            style={{ background: 'var(--c-border)', color: 'var(--c-muted)' }}>
             <ChevronLeft className="w-4 h-4" /> Back
           </button>
 
           <button onClick={handleNext} disabled={!canProceed() || submitting}
-            className="flex items-center gap-1.5 px-6 py-2.5 rounded-xl font-semibold transition-all disabled:opacity-40"
-            style={{ background: 'var(--c-accent1)', color: 'var(--c-accent1-fg)' }}>
-            {submitting ? <LoadingSpinner size="sm" text="" /> : (
-              <>{current === questions.length - 1 ? 'Get My Results' : 'Next'}<ChevronRight className="w-4 h-4" /></>
-            )}
+            className="flex items-center gap-1.5 px-6 py-2.5 rounded-xl font-semibold text-sm transition-all disabled:opacity-30 hover:opacity-90 text-white"
+            style={{ background: bg }}>
+            {submitting
+              ? <LoadingSpinner size="sm" text="" />
+              : <>{current === questions.length - 1 ? 'Get My Results' : 'Next'}<ChevronRight className="w-4 h-4" /></>
+            }
           </button>
         </div>
       </div>

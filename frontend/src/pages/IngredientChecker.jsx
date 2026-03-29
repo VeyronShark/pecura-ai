@@ -93,12 +93,6 @@ const IngredientChecker = () => {
     else if (e.key === 'Escape') setShowSug(false);
   };
 
-  const highlight = (text, query) => {
-    const f = fmt(text), idx = text.indexOf(query.toLowerCase());
-    if (idx === -1) return <span>{f}</span>;
-    return <><span>{f.slice(0, idx)}</span><span className="font-bold" style={{ color: 'var(--c-primary)' }}>{f.slice(idx, idx + query.length)}</span><span>{f.slice(idx + query.length)}</span></>;
-  };
-
   const analyze = async () => {
     if (!ingredients.length) return;
     setLoading(true);
@@ -108,148 +102,208 @@ const IngredientChecker = () => {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in max-w-3xl mx-auto">
+    <div className="animate-fade-in">
 
-      {/* ── Header ── */}
-      <div className="rounded-2xl px-6 py-5" style={{ background: 'var(--c-secondary)' }}>
-        <div className="flex items-center gap-2 mb-1">
-          <FlaskConical className="w-5 h-5 text-white" />
-          <h1 className="text-2xl font-bold text-white">Ingredient Checker</h1>
-        </div>
-        <p className="text-sm text-white/70">Check for ingredient conflicts and get safety guidance for your routine.</p>
+      {/* Page header */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold" style={{ color: 'var(--c-text)' }}>Ingredient Checker</h1>
+        <p className="text-sm mt-0.5" style={{ color: 'var(--c-muted)' }}>Check for conflicts and get safety guidance for your routine.</p>
       </div>
 
-      {/* ── Input ── */}
-      <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-tertiary-dark)' }}>
-        <h2 className="font-semibold text-main mb-3">Add Ingredients</h2>
-        <div className="flex gap-2 mb-4">
-          <div className="flex-1 relative">
-            <input ref={inputRef} type="text" placeholder="Type an ingredient name..."
-              value={input} onChange={e => handleInput(e.target.value)}
-              onKeyDown={handleKey} onFocus={() => suggestions.length > 0 && setShowSug(true)}
-              className="w-full px-4 py-2.5 rounded-lg text-sm focus:outline-none focus:ring-2"
-              style={{ border: '1px solid var(--c-tertiary-dark)', '--tw-ring-color': 'var(--c-secondary)' }}
-              autoComplete="off" />
-            {showSug && (
-              <ul ref={sugRef} className="absolute top-full left-0 right-0 mt-1 bg-white rounded-xl shadow-lg z-20 overflow-hidden"
-                style={{ border: '1px solid var(--c-tertiary-dark)' }}>
-                {suggestions.map((s, i) => (
-                  <li key={s} onMouseDown={() => add(s)} onMouseEnter={() => setActiveIdx(i)}
-                    className="flex items-center justify-between px-4 py-2.5 text-sm cursor-pointer transition-colors"
-                    style={{ background: i === activeIdx ? 'var(--c-tertiary)' : 'transparent', color: 'var(--c-text)' }}>
-                    <span>{highlight(s, input)}</span>
-                    {INGREDIENT_INFO[s] && (
-                      <span className="text-xs text-muted ml-2 truncate max-w-32 hidden sm:block">
-                        {INGREDIENT_INFO[s].split('.')[0]}
-                      </span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-          <button onClick={() => input.trim() && add(input)} disabled={!input.trim()}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-semibold text-white disabled:opacity-40"
-            style={{ background: 'var(--c-secondary)' }}>
-            <Plus className="w-4 h-4" /> Add
-          </button>
-        </div>
+      {/* Two-column layout */}
+      <div className="flex gap-6 items-start">
 
-        <p className="text-xs font-semibold text-muted uppercase tracking-wide mb-2">Common ingredients</p>
-        <div className="flex flex-wrap gap-1.5">
-          {COMMON.map(ing => (
-            <button key={ing} onClick={() => add(ing)} disabled={ingredients.includes(ing)}
-              className="px-3 py-1 rounded-full text-xs font-medium transition-colors"
-              style={{
-                background: ingredients.includes(ing) ? 'var(--c-secondary)' : 'var(--c-tertiary)',
-                color: ingredients.includes(ing) ? '#fff' : 'var(--c-tertiary-fg)',
-              }}>
-              {ingredients.includes(ing) ? '✓ ' : ''}{fmt(ing)}
-            </button>
-          ))}
-        </div>
-      </div>
+        {/* ── Left: input panel ── */}
+        <div className="flex-1 min-w-0 space-y-5">
 
-      {/* ── Selected ── */}
-      {ingredients.length > 0 && (
-        <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-tertiary-dark)' }}>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-semibold text-main">Selected ({ingredients.length})</h2>
-            <button onClick={analyze} disabled={loading}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white disabled:opacity-50"
-              style={{ background: 'var(--c-secondary)' }}>
-              {loading ? <LoadingSpinner size="sm" text="" /> : <Search className="w-4 h-4" />}
-              Analyze
-            </button>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {ingredients.map(ing => (
-              <div key={ing} className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm text-white"
-                style={{ background: 'var(--c-secondary)' }}
-                onMouseEnter={() => setHoveredIng(ing)} onMouseLeave={() => setHoveredIng(null)}>
-                <span>{fmt(ing)}</span>
-                <button onClick={() => remove(ing)} className="opacity-70 hover:opacity-100"><X className="w-3.5 h-3.5" /></button>
-                {hoveredIng === ing && INGREDIENT_INFO[ing] && (
-                  <div className="absolute bottom-full left-0 mb-2 w-56 bg-gray-900 text-white text-xs rounded-lg p-2.5 z-10 shadow-lg pointer-events-none">
-                    {INGREDIENT_INFO[ing]}
-                    <div className="absolute top-full left-4 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900" />
-                  </div>
+          {/* Search input */}
+          <div className="bento p-5">
+            <h2 className="font-semibold text-sm mb-4" style={{ color: 'var(--c-text)' }}>Add Ingredients</h2>
+            <div className="flex gap-2 mb-5">
+              <div className="flex-1 relative">
+                <input ref={inputRef} type="text" placeholder="Type an ingredient name..."
+                  value={input} onChange={e => handleInput(e.target.value)}
+                  onKeyDown={handleKey} onFocus={() => suggestions.length > 0 && setShowSug(true)}
+                  className="w-full px-4 py-2.5 rounded-xl text-sm focus:outline-none"
+                  style={{ border: '1.5px solid var(--c-border)', background: 'var(--c-surface)', color: 'var(--c-text)' }}
+                  autoComplete="off" />
+                {showSug && (
+                  <ul ref={sugRef} className="absolute top-full left-0 right-0 mt-1 rounded-xl shadow-xl z-20 overflow-hidden"
+                    style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+                    {suggestions.map((s, i) => (
+                      <li key={s} onMouseDown={() => add(s)} onMouseEnter={() => setActiveIdx(i)}
+                        className="flex items-center justify-between px-4 py-2.5 text-sm cursor-pointer transition-colors"
+                        style={{ background: i === activeIdx ? 'var(--c-primary-light)' : 'transparent', color: 'var(--c-text)' }}>
+                        <span className="font-medium">{fmt(s)}</span>
+                        {INGREDIENT_INFO[s] && (
+                          <span className="text-xs ml-2 truncate max-w-36 hidden sm:block" style={{ color: 'var(--c-muted)' }}>
+                            {INGREDIENT_INFO[s].split('.')[0]}
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </div>
-            ))}
-          </div>
-          <p className="text-xs text-muted mt-2 flex items-center gap-1">
-            <Info className="w-3 h-3" /> Hover over an ingredient to see info
-          </p>
-        </div>
-      )}
+              <button onClick={() => input.trim() && add(input)} disabled={!input.trim()}
+                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-white disabled:opacity-30 transition-all hover:opacity-90"
+                style={{ background: 'var(--c-tertiary)' }}>
+                <Plus className="w-4 h-4" /> Add
+              </button>
+            </div>
 
-      {/* ── Results ── */}
+            <p className="text-xs font-bold uppercase tracking-widest mb-2.5" style={{ color: 'var(--c-muted)' }}>Common</p>
+            <div className="flex flex-wrap gap-1.5">
+              {COMMON.map(ing => {
+                const added = ingredients.includes(ing);
+                return (
+                  <button key={ing} onClick={() => add(ing)} disabled={added}
+                    className="px-2.5 py-1 rounded-lg text-xs font-medium transition-all"
+                    style={{
+                      background: added ? 'var(--c-tertiary)' : 'var(--c-tertiary-light)',
+                      color: added ? '#fff' : 'var(--c-tertiary)',
+                    }}>
+                    {added ? '✓ ' : ''}{fmt(ing)}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Selected ingredients */}
+          {ingredients.length > 0 && (
+            <div className="bento p-5">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-semibold text-sm" style={{ color: 'var(--c-text)' }}>
+                  Selected <span className="ml-1 px-2 py-0.5 rounded-full text-xs font-bold text-white"
+                    style={{ background: 'var(--c-tertiary)' }}>{ingredients.length}</span>
+                </h2>
+                <button onClick={analyze} disabled={loading}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold text-white disabled:opacity-40 transition-all hover:opacity-90"
+                  style={{ background: 'var(--c-primary)' }}>
+                  {loading ? <LoadingSpinner size="sm" text="" /> : <Search className="w-3.5 h-3.5" />}
+                  Analyze
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {ingredients.map(ing => (
+                  <div key={ing} className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-medium text-white"
+                    style={{ background: 'var(--c-primary)' }}
+                    onMouseEnter={() => setHoveredIng(ing)} onMouseLeave={() => setHoveredIng(null)}>
+                    <span>{fmt(ing)}</span>
+                    <button onClick={() => remove(ing)} className="opacity-60 hover:opacity-100 ml-0.5">
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                    {hoveredIng === ing && INGREDIENT_INFO[ing] && (
+                      <div className="absolute bottom-full left-0 mb-2 w-60 text-white text-xs rounded-xl p-3 z-10 shadow-xl pointer-events-none"
+                        style={{ background: 'var(--c-text)' }}>
+                        {INGREDIENT_INFO[ing]}
+                        <div className="absolute top-full left-4 border-l-4 border-r-4 border-t-4 border-transparent"
+                          style={{ borderTopColor: 'var(--c-text)' }} />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs mt-3 flex items-center gap-1" style={{ color: 'var(--c-muted)' }}>
+                <Info className="w-3 h-3" /> Hover an ingredient to see info
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* ── Right: results + info panel ── */}
+        <div className="w-80 shrink-0 space-y-4 hidden lg:block">
+
+          {/* Results */}
+          {analysis ? (
+            <div className="bento overflow-hidden animate-fade-in">
+              <div className="px-5 py-4 flex items-center gap-2 text-white font-semibold text-sm"
+                style={{ background: analysis.warnings?.length > 0 ? 'var(--c-accent2)' : 'var(--c-tertiary)' }}>
+                {analysis.warnings?.length > 0
+                  ? <><AlertTriangle className="w-4 h-4" />{analysis.warnings.length} conflict{analysis.warnings.length > 1 ? 's' : ''}</>
+                  : <><CheckCircle2 className="w-4 h-4" />All clear</>
+                }
+              </div>
+              <div className="p-5 space-y-3">
+                {analysis.warnings?.length > 0 ? (
+                  analysis.warnings.map((w, i) => (
+                    <div key={i} className="rounded-xl p-3.5" style={{ background: 'var(--c-accent2-light)', border: '1px solid var(--c-accent2)33' }}>
+                      <p className="font-semibold text-xs mb-2" style={{ color: 'var(--c-accent2)' }}>{w.message}</p>
+                      <div className="flex flex-wrap gap-1">
+                        {w.ingredients?.map(ing => (
+                          <span key={ing} className="pill text-white" style={{ background: 'var(--c-accent2)' }}>{fmt(ing)}</span>
+                        ))}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-sm" style={{ color: 'var(--c-muted)' }}>Your selected ingredients appear compatible.</p>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="bento p-5 text-center">
+              <FlaskConical className="w-8 h-8 mx-auto mb-2" style={{ color: 'var(--c-border)' }} />
+              <p className="text-sm font-medium" style={{ color: 'var(--c-muted)' }}>Add ingredients and click Analyze</p>
+            </div>
+          )}
+
+          {/* Tips */}
+          <div className="bento p-5">
+            <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--c-muted)' }}>Tips</p>
+            <ul className="space-y-2.5 text-sm" style={{ color: 'var(--c-muted)' }}>
+              {[
+                'Always patch test new combinations',
+                'Introduce actives gradually',
+                'Retinoids at night, vitamin C in the morning',
+                'Consult a dermatologist for reactions',
+              ].map((t, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ background: 'var(--c-tertiary)' }} />
+                  {t}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Disclaimer */}
+          <div className="rounded-xl p-4" style={{ background: 'var(--c-tertiary-light)' }}>
+            <p className="text-xs leading-relaxed" style={{ color: 'var(--c-muted)' }}>
+              General guidance only. Not a substitute for professional dermatological advice.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile results */}
       {analysis && (
-        <div className="rounded-xl overflow-hidden animate-fade-in" style={{ border: '1px solid var(--c-tertiary-dark)' }}>
-          <div className="px-5 py-4 text-white font-semibold"
-            style={{ background: analysis.warnings?.length > 0 ? 'var(--c-accent2)' : 'var(--c-accent1)' }}>
+        <div className="lg:hidden mt-5 bento overflow-hidden animate-fade-in">
+          <div className="px-5 py-4 flex items-center gap-2 text-white font-semibold text-sm"
+            style={{ background: analysis.warnings?.length > 0 ? 'var(--c-accent2)' : 'var(--c-tertiary)' }}>
             {analysis.warnings?.length > 0
-              ? <div className="flex items-center gap-2"><AlertTriangle className="w-5 h-5" />{analysis.warnings.length} conflict{analysis.warnings.length > 1 ? 's' : ''} found</div>
-              : <div className="flex items-center gap-2"><CheckCircle2 className="w-5 h-5" />No conflicts detected</div>
+              ? <><AlertTriangle className="w-4 h-4" />{analysis.warnings.length} conflict{analysis.warnings.length > 1 ? 's' : ''}</>
+              : <><CheckCircle2 className="w-4 h-4" />All clear</>
             }
           </div>
-          <div className="p-5 space-y-3" style={{ background: 'var(--c-surface)' }}>
+          <div className="p-5">
             {analysis.warnings?.length > 0 ? (
               analysis.warnings.map((w, i) => (
-                <div key={i} className="rounded-xl p-4" style={{ background: 'var(--c-accent2-light)', border: '1px solid var(--c-accent2)' }}>
-                  <p className="font-medium text-sm mb-2" style={{ color: 'var(--c-accent2-dark)' }}>{w.message}</p>
-                  <div className="flex flex-wrap gap-1.5">
+                <div key={i} className="rounded-xl p-3.5 mb-2" style={{ background: 'var(--c-accent2-light)' }}>
+                  <p className="font-semibold text-xs mb-1" style={{ color: 'var(--c-accent2)' }}>{w.message}</p>
+                  <div className="flex flex-wrap gap-1">
                     {w.ingredients?.map(ing => (
-                      <span key={ing} className="px-2 py-0.5 rounded-full text-xs font-medium text-white"
-                        style={{ background: 'var(--c-accent2)' }}>{fmt(ing)}</span>
+                      <span key={ing} className="pill text-white" style={{ background: 'var(--c-accent2)' }}>{fmt(ing)}</span>
                     ))}
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-sm text-muted">Your selected ingredients appear to be compatible with each other.</p>
+              <p className="text-sm" style={{ color: 'var(--c-muted)' }}>Your selected ingredients appear compatible.</p>
             )}
-
-            <div className="rounded-xl p-4 mt-2" style={{ background: 'var(--c-tertiary)', border: '1px solid var(--c-tertiary-dark)' }}>
-              <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--c-secondary)' }}>General Tips</p>
-              <ul className="text-sm text-muted space-y-1">
-                <li>• Always patch test new ingredient combinations</li>
-                <li>• Introduce active ingredients gradually</li>
-                <li>• Use retinoids at night, vitamin C in the morning</li>
-                <li>• Consult a dermatologist for persistent reactions</li>
-              </ul>
-            </div>
           </div>
         </div>
       )}
-
-      {/* ── Disclaimer ── */}
-      <div className="rounded-xl p-4" style={{ background: 'var(--c-tertiary)', border: '1px solid var(--c-tertiary-dark)' }}>
-        <p className="text-xs text-muted leading-relaxed">
-          <strong>Disclaimer:</strong> This tool provides general guidance based on common ingredient interactions. It is not a substitute for professional dermatological advice. Always patch test new products and consult a dermatologist for personalised recommendations.
-        </p>
-      </div>
     </div>
   );
 };

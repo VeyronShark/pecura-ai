@@ -1,85 +1,107 @@
 @import "tailwindcss";
 @import "./theme.css";
 
-@layer utilities {
-
-  /* ── Primary ─────────────────────────────────────────── */
-  .bg-brand             { background-color: var(--c-primary); }
-  .bg-brand-light       { background-color: var(--c-primary-light); }
-  .bg-brand-dark        { background-color: var(--c-primary-dark); }
-  .text-brand           { color: var(--c-primary); }
-  .text-brand-fg        { color: var(--c-primary-fg); }
-  .border-brand         { border-color: var(--c-primary); }
-  .border-brand-light   { border-color: var(--c-primary-light); }
-  .hover\:bg-brand:hover       { background-color: var(--c-primary); }
-  .hover\:bg-brand-dark:hover  { background-color: var(--c-primary-dark); }
-  .hover\:bg-brand-light:hover { background-color: var(--c-primary-light); }
-  .hover\:text-brand:hover     { color: var(--c-primary); }
-  .hover\:border-brand-light:hover { border-color: var(--c-primary-light); }
-  .focus\:ring-brand:focus     { --tw-ring-color: var(--c-primary); }
-
-  /* ── Secondary ───────────────────────────────────────── */
-  .bg-secondary             { background-color: var(--c-secondary); }
-  .bg-secondary-light       { background-color: var(--c-secondary-light); }
-  .bg-secondary-dark        { background-color: var(--c-secondary-dark); }
-  .text-secondary           { color: var(--c-secondary); }
-  .text-secondary-fg        { color: var(--c-secondary-fg); }
-  .border-secondary         { border-color: var(--c-secondary); }
-  .border-secondary-light   { border-color: var(--c-secondary-light); }
-  .hover\:bg-secondary-dark:hover  { background-color: var(--c-secondary-dark); }
-  .hover\:bg-secondary-light:hover { background-color: var(--c-secondary-light); }
-  .hover\:text-secondary:hover     { color: var(--c-secondary); }
-
-  /* ── Tertiary ────────────────────────────────────────── */
-  .bg-tertiary      { background-color: var(--c-tertiary); }
-  .bg-tertiary-dark { background-color: var(--c-tertiary-dark); }
-  .text-tertiary-fg { color: var(--c-tertiary-fg); }
-
-  /* ── Accent 1 (success / highlights) ────────────────── */
-  .bg-accent1             { background-color: var(--c-accent1); }
-  .bg-accent1-light       { background-color: var(--c-accent1-light); }
-  .text-accent1           { color: var(--c-accent1); }
-  .text-accent1-fg        { color: var(--c-accent1-fg); }
-  .border-accent1         { border-color: var(--c-accent1); }
-  .border-accent1-light   { border-color: var(--c-accent1-light); }
-
-  /* ── Accent 2 (warning / conflict) ──────────────────── */
-  .bg-accent2             { background-color: var(--c-accent2); }
-  .bg-accent2-light       { background-color: var(--c-accent2-light); }
-  .text-accent2           { color: var(--c-accent2); }
-  .text-accent2-fg        { color: var(--c-accent2-fg); }
-  .border-accent2         { border-color: var(--c-accent2); }
-  .border-accent2-light   { border-color: var(--c-accent2-light); }
-
-  /* ── Surface / text ──────────────────────────────────── */
-  .bg-surface   { background-color: var(--c-surface); }
-  .bg-page      { background-color: var(--c-border); }
-  .text-main    { color: var(--c-text); }
-  .text-muted   { color: var(--c-muted); }
-  .border-base  { border-color: var(--c-border); }
-
-  /* ── Convenience aliases ─────────────────────────────────────────── */
-  .bg-page-alt  { background-color: var(--c-secondary-light); }
-}
-
-/* ── Scrollbar ───────────────────────────────────────────── */
-::-webkit-scrollbar       { width: 6px; }
-::-webkit-scrollbar-track { background: var(--c-tertiary); }
-::-webkit-scrollbar-thumb { background: var(--c-primary-light); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--c-primary); }
-
-/* ── Animations ──────────────────────────────────────────── */
-@keyframes spin       { to { transform: rotate(360deg); } }
-@keyframes fadeIn     { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes pulse-soft { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
-
-.animate-spin       { animation: spin 1s linear infinite; }
-.animate-fade-in    { animation: fadeIn 0.3s ease-out; }
-.animate-pulse-soft { animation: pulse-soft 2s ease-in-out infinite; }
-
 * { box-sizing: border-box; }
 
 body {
-  background-color: var(--c-tertiary);
+  background-color: var(--c-surface);
   color: var(--c-text);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar       { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--c-border); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--c-muted); }
+
+/* ── Animations ── */
+@keyframes fadeUp   { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn   { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp  { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes spin     { to { transform: rotate(360deg); } }
+@keyframes float    { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes pulse-soft { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+
+.animate-fade-in    { animation: fadeUp 0.4s ease-out both; }
+.animate-slide-up   { animation: slideUp 0.45s cubic-bezier(0.16,1,0.3,1) both; }
+.animate-spin       { animation: spin 1s linear infinite; }
+.animate-float      { animation: float 4s ease-in-out infinite; }
+.animate-pulse-soft { animation: pulse-soft 2s ease-in-out infinite; }
+
+/* ── Small pill tag — use only for labels, never as section bg ── */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.18rem 0.6rem;
+  border-radius: 99px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+/* ── Glass surface ── */
+.glass {
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.75);
+}
+
+/* ── Sidebar layout shell ── */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.app-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--c-primary);
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content {
+  flex: 1;
+  min-width: 0;
+  background: var(--c-surface);
+}
+
+/* ── Solid colour section blocks (full saturation, not light) ── */
+.section-primary   { background: var(--c-primary); color: #fff; }
+.section-secondary { background: var(--c-secondary); color: #fff; }
+.section-tertiary  { background: var(--c-tertiary); color: #fff; }
+.section-accent1   { background: var(--c-accent1); color: #fff; }
+.section-accent2   { background: var(--c-accent2); color: #fff; }
+.section-dark      { background: var(--c-text); color: #fff; }
+
+/* ── Subtle tinted card (light used sparingly, only for small inset areas) ── */
+.tint-primary   { background: var(--c-primary-light); }
+.tint-secondary { background: var(--c-secondary-light); }
+.tint-tertiary  { background: var(--c-tertiary-light); }
+.tint-accent1   { background: var(--c-accent1-light); }
+.tint-accent2   { background: var(--c-accent2-light); }
+
+/* ── Bento card ── */
+.bento {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: 1.25rem;
+  overflow: hidden;
+}
+
+/* ── Noise texture for coloured blocks ── */
+.noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  border-radius: inherit;
 }

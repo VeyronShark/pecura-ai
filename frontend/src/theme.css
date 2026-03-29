@@ -1,75 +1,43 @@
 /*
  * Pecura AI — Global Colour Palette
  * ══════════════════════════════════
+ * To retheme the entire app, change only the 10 values marked below.
  *
- * ── 5 brand colours ──────────────────────────────────────────────────────
+ *   --c-primary    Main brand colour
+ *   --c-secondary  Supporting accent
+ *   --c-tertiary   Third accent
+ *   --c-accent1    Highlight / success
+ *   --c-accent2    Warning / conflict
  *
- *   --c-primary    Main actions: buttons, links, active nav, focus rings
- *   --c-secondary  Supporting UI: secondary buttons, tags, hover fills
- *   --c-tertiary   Backgrounds: page tint, card accents, subtle fills
- *   --c-accent1    Highlights: badges, match scores, success states
- *   --c-accent2    Warnings / conflicts / destructive actions
- *
- *   Each colour has a -light (tinted bg) and -dark (hover/pressed) variant.
- *   -fg is always the foreground colour when placed on that background.
- *
- * ── Surface / text (leave these alone unless changing light/dark mode) ───
- *
- *   --c-surface    Card and panel backgrounds
- *   --c-border     Dividers and subtle borders
- *   --c-text       Primary body text
- *   --c-muted      Secondary / placeholder text
- *
- * ── Skin-type colours (dashboard only) ──────────────────────────────────
- *   Independent of the 5-colour palette above.
+ *   Each has a -light variant (used only for small tags/pills, never full backgrounds).
  */
 
 :root {
+  /* ── 5 brand colours ── change these 10 values to retheme ── */
 
-  /* ── Primary  (deep red) ────────────────────── */
-  --c-primary:       #b91c1c;   /* red-700                     */
-  --c-primary-light: #fee2e2;   /* red-100  — badge/hover fill */
-  --c-primary-dark:  #991b1b;   /* red-800  — pressed state    */
-  --c-primary-fg:    #ffffff;
+  /* Sage green — primary actions, sidebar, key UI */
+  --c-primary:       #4a7c6f;
+  --c-primary-light: #e0f0ec;
 
-  /* ── Secondary  (blue) ───────────────────────── */
-  --c-secondary:       #1d4ed8;   /* blue-700                    */
-  --c-secondary-light: #dbeafe;   /* blue-100 — tinted bg        */
-  --c-secondary-dark:  #1e40af;   /* blue-800 — hover            */
-  --c-secondary-fg:    #ffffff;
+  /* Terracotta — secondary actions, warm accents */
+  --c-secondary:     #c0674a;
+  --c-secondary-light: #f7e8e3;
 
-  /* ── Tertiary  (green) ───────────────────────── */
-  --c-tertiary:       #f0fdf4;   /* green-50  — page background */
-  --c-tertiary-dark:  #bbf7d0;   /* green-200 — dividers        */
-  --c-tertiary-fg:    #166534;   /* green-800 — text on green   */
+  /* Dusty blue — tertiary, calm info areas */
+  --c-tertiary:      #4a6fa5;
+  --c-tertiary-light: #dde8f5;
 
-  /* ── Accent 1  (magenta) ─────────────────────── */
-  --c-accent1:       #c026d3;   /* fuchsia-600                 */
-  --c-accent1-light: #fae8ff;   /* fuchsia-100 — tinted bg     */
-  --c-accent1-dark:  #a21caf;   /* fuchsia-700 — hover         */
-  --c-accent1-fg:    #ffffff;
+  /* Warm gold — highlights, morning routine, success */
+  --c-accent1:       #b5893a;
+  --c-accent1-light: #f5ead0;
 
-  /* ── Accent 2  (yellow) ──────────────────────── */
-  --c-accent2:       #ca8a04;   /* yellow-600                  */
-  --c-accent2-light: #fef9c3;   /* yellow-100 — tinted bg      */
-  --c-accent2-dark:  #a16207;   /* yellow-700 — hover          */
-  --c-accent2-fg:    #ffffff;
+  /* Blush rose — warnings, saved, evening routine */
+  --c-accent2:       #b05c72;
+  --c-accent2-light: #f5e0e7;
 
-  /* ── Surface / text ──────────────────────────── */
-  --c-surface:  #ffffff;
-  --c-border:   #f0fdf4;        /* matches tertiary page bg    */
-  --c-text:     #111827;        /* gray-900                    */
-  --c-muted:    #6b7280;        /* gray-500                    */
-
-  /* ── Skin-type palette (dashboard only) ──── */
-  --c-skin-dry:             #3b82f6;
-  --c-skin-dry-light:       #dbeafe;
-  --c-skin-oily:            #10b981;
-  --c-skin-oily-light:      #d1fae5;
-  --c-skin-combo:           #8b5cf6;
-  --c-skin-combo-light:     #ede9fe;
-  --c-skin-sensitive:       #ec4899;
-  --c-skin-sensitive-light: #fce7f3;
-  --c-skin-normal:          #f59e0b;
-  --c-skin-normal-light:    #fef3c7;
+  /* ── Surface / text (not part of the 5-colour system) ── */
+  --c-surface:  #fdfcfb;
+  --c-border:   #e8e3de;
+  --c-text:     #1c1917;
+  --c-muted:    #78716c;
 }
