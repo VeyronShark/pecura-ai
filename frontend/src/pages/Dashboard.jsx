@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Sparkles, Target, Calendar, Heart, ArrowRight, RefreshCw, Info, ChevronRight } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Sparkles, Target, Calendar, Heart, ArrowRight, RefreshCw, Trash2, Info, ChevronRight } from 'lucide-react';
 import { skincareAPI } from '../api/skincare.js';
 import { useApp } from '../context/AppContext.jsx';
 import ProductCard from '../components/ProductCard.jsx';
@@ -16,6 +16,7 @@ const SKIN_META = {
 
 const Dashboard = () => {
   const { skinProfile, routine, savedProducts, clearProfile } = useApp();
+  const navigate = useNavigate();
   const [recommendations, setRecommendations] = useState([]);
   const [skinInfo, setSkinInfo] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -68,11 +69,18 @@ const Dashboard = () => {
           <h1 className="text-2xl font-bold" style={{ color: 'var(--c-text)' }}>Dashboard</h1>
           <p className="text-sm mt-0.5" style={{ color: 'var(--c-muted)' }}>Your personalised skincare overview</p>
         </div>
-        <button onClick={clearProfile}
-          className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg transition-all hover:opacity-80"
-          style={{ background: 'var(--c-border)', color: 'var(--c-muted)' }}>
-          <RefreshCw className="w-3 h-3" /> Retake quiz
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={() => navigate('/quiz')}
+            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg transition-all hover:opacity-80"
+            style={{ background: 'var(--c-border)', color: 'var(--c-muted)' }}>
+            <RefreshCw className="w-3 h-3" /> Retake quiz
+          </button>
+          <button onClick={() => { clearProfile(); navigate('/'); }}
+            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg transition-all hover:opacity-80"
+            style={{ background: 'var(--c-border)', color: 'var(--c-muted)' }}>
+            <Trash2 className="w-3 h-3" /> Delete data
+          </button>
+        </div>
       </div>
 
       {/* Bento grid */}

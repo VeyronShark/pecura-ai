@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard.jsx';
 import Products from './pages/Products.jsx';
 import IngredientChecker from './pages/IngredientChecker.jsx';
 import RoutineBuilder from './pages/RoutineBuilder.jsx';
+import Capstone from './pages/Capstone.jsx';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/products" element={<Layout><Products /></Layout>} />
           <Route path="/ingredient-checker" element={<Layout><IngredientChecker /></Layout>} />
           <Route path="/routine-builder" element={<Layout><RoutineBuilder /></Layout>} />
+          <Route path="/capstone" element={<Layout><Capstone /></Layout>} />
           <Route path="*" element={<Landing />} />
         </Routes>
       </Router>

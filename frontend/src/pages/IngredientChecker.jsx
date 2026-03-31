@@ -249,6 +249,27 @@ const IngredientChecker = () => {
             </div>
           )}
 
+          {/* How it works */}
+          <div className="bento p-5">
+            <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--c-muted)' }}>How it works</p>
+            <ul className="space-y-3 text-sm" style={{ color: 'var(--c-muted)' }}>
+              {[
+                ['🔍', 'Search & select', 'Type any ingredient name to search the database, or pick from the common shortcuts.'],
+                ['⚗️', 'Conflict detection', 'The checker runs your list against a set of known incompatible pairs — e.g. retinol + AHAs, vitamin C + niacinamide at high concentrations.'],
+                ['💡', 'Ingredient info', 'Hover any selected ingredient to see what it does and which skin types it suits.'],
+                ['✅', 'Safe to use', 'If no conflicts are found, your combination is generally considered routine-safe.'],
+              ].map(([icon, title, desc]) => (
+                <li key={title} className="flex gap-2.5">
+                  <span className="text-base shrink-0 mt-0.5">{icon}</span>
+                  <div>
+                    <p className="font-semibold text-xs mb-0.5" style={{ color: 'var(--c-text)' }}>{title}</p>
+                    <p className="text-xs leading-relaxed">{desc}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           {/* Tips */}
           <div className="bento p-5">
             <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--c-muted)' }}>Tips</p>

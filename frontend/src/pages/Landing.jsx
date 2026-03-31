@@ -63,7 +63,7 @@ const Landing = () => {
             </div>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-black leading-[1.05] tracking-tight mb-6"
               style={{ color: 'var(--c-text)' }}>
-              Skin that<br />
+              Skincare that<br />
               <span style={{ color: 'var(--c-primary)' }}>actually</span><br />
               works.
             </h1>

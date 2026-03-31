@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Home, FlaskConical, Calendar, LayoutDashboard, ShoppingBag, Leaf, Menu, X } from 'lucide-react';
+import { Home, FlaskConical, Calendar, LayoutDashboard, ShoppingBag, Leaf, Menu, X, GraduationCap } from 'lucide-react';
 import { useApp } from '../context/AppContext.jsx';
 import { useState } from 'react';
 
@@ -9,6 +9,7 @@ const nav = [
   { name: 'Products',    href: '/products',           icon: ShoppingBag },
   { name: 'Ingredients', href: '/ingredient-checker', icon: FlaskConical },
   { name: 'Routine',     href: '/routine-builder',    icon: Calendar },
+  { name: 'Capstone',    href: '/capstone',           icon: GraduationCap },
 ];
 
 const NAV_ACCENTS = [
@@ -17,6 +18,7 @@ const NAV_ACCENTS = [
   'var(--c-tertiary-light)',
   'var(--c-accent1-light)',
   'var(--c-accent2-light)',
+  'var(--c-primary-light)',
 ];
 
 const Sidebar = ({ onClose }) => {
